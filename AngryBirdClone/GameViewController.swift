@@ -3,7 +3,7 @@
 //  AngryBirdClone
 //
 //  Created by Ali serkan Boyracı  on 21.11.2022.
-//
+// you can take images from opengameart.org
 
 import UIKit
 import SpriteKit
