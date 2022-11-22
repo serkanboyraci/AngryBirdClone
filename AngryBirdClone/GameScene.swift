@@ -14,6 +14,12 @@ class GameScene: SKScene {
     
     var bird = SKSpriteNode()
     
+    var box1 = SKSpriteNode()
+    var box2 = SKSpriteNode()
+    var box3 = SKSpriteNode()
+    var box4 = SKSpriteNode()
+    var box5 = SKSpriteNode()
+    
 
     
     override func didMove(to view: SKView) {
@@ -27,17 +33,69 @@ class GameScene: SKScene {
         self.addChild(bird2)
         */
         
+        // PHYSICSBODY
+        self.physicsBody = SKPhysicsBody(edgeLoopFrom: frame) // not to disappear from frame. to give borders.
+        self.scene?.scaleMode = .aspectFit // background will be aspectfit style to scene.
+        
+        
+        
+        // BIRD
+        
         bird = childNode(withName: "bird") as! SKSpriteNode // if you define first in GameScene, you have to define like this
         
         let birdTexture = SKTexture(imageNamed: "bird") // to use frame size and height
         
-        bird.physicsBody = SKPhysicsBody(circleOfRadius: birdTexture.size().height / 10) // to define bird body
+        bird.physicsBody = SKPhysicsBody(circleOfRadius: birdTexture.size().height / 10.5) // to define bird body
         
         bird.physicsBody?.affectedByGravity = true
         bird.physicsBody?.isDynamic = true
         bird.physicsBody?.mass = 0.5
         
-        self.physicsBody = SKPhysicsBody(edgeLoopFrom: frame) // not to disappear from frame. to give borders.
+        // BOXES
+        
+        
+        
+        let boxTexture = SKTexture(imageNamed: "brick")
+        let size = CGSize(width: boxTexture.size().width / 4.8, height: boxTexture.size().height / 4.8)
+        
+        box1 = childNode(withName: "box1") as! SKSpriteNode
+        box1.physicsBody = SKPhysicsBody(rectangleOf: size)
+        box1.physicsBody?.affectedByGravity = true
+        box1.physicsBody?.isDynamic = true
+        box1.physicsBody?.mass = 0.4
+        box1.physicsBody?.allowsRotation = true
+        
+        box2 = childNode(withName: "box2") as! SKSpriteNode
+        box2.physicsBody = SKPhysicsBody(rectangleOf: size)
+        box2.physicsBody?.affectedByGravity = true
+        box2.physicsBody?.isDynamic = true
+        box2.physicsBody?.mass = 0.4
+        box2.physicsBody?.allowsRotation = true
+        
+        box3 = childNode(withName: "box3") as! SKSpriteNode
+        box3.physicsBody = SKPhysicsBody(rectangleOf: size)
+        box3.physicsBody?.affectedByGravity = true
+        box3.physicsBody?.isDynamic = true
+        box3.physicsBody?.mass = 0.4
+        box3.physicsBody?.allowsRotation = true
+       
+        box4 = childNode(withName: "box4") as! SKSpriteNode
+        box4.physicsBody = SKPhysicsBody(rectangleOf: size)
+        box4.physicsBody?.affectedByGravity = true
+        box4.physicsBody?.isDynamic = true
+        box4.physicsBody?.mass = 0.4
+        box4.physicsBody?.allowsRotation = true
+        
+        box5 = childNode(withName: "box5") as! SKSpriteNode
+        box5.physicsBody = SKPhysicsBody(rectangleOf: size)
+        box5.physicsBody?.affectedByGravity = true
+        box5.physicsBody?.isDynamic = true
+        box5.physicsBody?.mass = 0.4
+        box5.physicsBody?.allowsRotation = true
+        
+        
+        
+        
         
         
 
