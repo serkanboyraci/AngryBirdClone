@@ -27,9 +27,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     enum ColliderType : UInt32 {
         case Bird = 1
         case Box = 2
+    }
         //case Ground = 4 when you multiply all of them , it mustn't be equeled the last one. 1+2 !=4 || 1+2+4 != 8
         //case Tree = 8,16,32,64,128...
-    }
+    
+    
+    var score = 0
+    var scoreLabel = SKLabelNode()
     
 
     
@@ -67,7 +71,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // for collision
         bird.physicsBody?.contactTestBitMask = ColliderType.Bird.rawValue
         bird.physicsBody?.categoryBitMask = ColliderType.Bird.rawValue
-        bird.physicsBody?.collisionBitMask = ColliderType.Bird.rawValue
+        bird.physicsBody?.collisionBitMask = ColliderType.Box.rawValue // it mustnt be same. like bird and bird
         
         // BOXES
         
@@ -125,8 +129,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         box5.physicsBody?.collisionBitMask = ColliderType.Bird.rawValue //to crash eachother
         
+        //LABEL
         
-        
+        scoreLabel.fontName = "Helvetica"
+        scoreLabel.fontSize = 60
+        scoreLabel.text = "0"
+        scoreLabel.position = CGPoint(x: 0, y: self.frame.height / 4)
+        scoreLabel.zPosition = 2 // not touch bird
+        self.addChild(scoreLabel)
         
         
         
@@ -135,8 +145,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func didBegin(_ contact: SKPhysicsContact) {
         
-        if contact.bodyA.collisionBitMask == ColliderType.Bird.rawValue || contact.bodyB.contactTestBitMask == ColliderType.Bird.rawValue { // to recognize collision
-            print("contact")
+        if contact.bodyA.collisionBitMask == ColliderType.Bird.rawValue || contact.bodyB.contactTestBitMask == ColliderType.Box.rawValue { // to recognize collision
+            
+            score += 1
+            scoreLabel.text = String(score)
             
         }
     }
@@ -256,6 +268,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 bird.physicsBody?.angularVelocity = 0
                 bird.position = originalPosition!
                 gameStarted = false
+                
+                // to update score to zero
+                score = 0
+                scoreLabel.text = String(score)
+                
+                // you can add best score and other things.
+                
                 
             }
         }
