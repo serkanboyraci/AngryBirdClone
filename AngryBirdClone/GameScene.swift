@@ -8,7 +8,7 @@
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //var bird2 = SKSpriteNode()
     
@@ -23,6 +23,13 @@ class GameScene: SKScene {
     var gameStarted = false // only is it false, you can drag the bird
     
     var originalPosition : CGPoint?
+    
+    enum ColliderType : UInt32 {
+        case Bird = 1
+        case Box = 2
+        //case Ground = 4 when you multiply all of them , it mustn't be equeled the last one. 1+2 !=4 || 1+2+4 != 8
+        //case Tree = 8,16,32,64,128...
+    }
     
 
     
@@ -40,6 +47,7 @@ class GameScene: SKScene {
         // PHYSICSBODY
         self.physicsBody = SKPhysicsBody(edgeLoopFrom: frame) // not to disappear from frame. to give borders.
         self.scene?.scaleMode = .aspectFit // background will be aspectfit style to scene.
+        self.physicsWorld.contactDelegate = self // to collide and contact eachother
         
         
         
@@ -56,6 +64,11 @@ class GameScene: SKScene {
         bird.physicsBody?.mass = 0.15
         originalPosition = bird.position
         
+        // for collision
+        bird.physicsBody?.contactTestBitMask = ColliderType.Bird.rawValue
+        bird.physicsBody?.categoryBitMask = ColliderType.Bird.rawValue
+        bird.physicsBody?.collisionBitMask = ColliderType.Bird.rawValue
+        
         // BOXES
         
         
@@ -70,6 +83,9 @@ class GameScene: SKScene {
         box1.physicsBody?.mass = 0.1
         box1.physicsBody?.allowsRotation = true
         
+        box1.physicsBody?.collisionBitMask = ColliderType.Bird.rawValue //to crash eachother
+        
+        
         box2 = childNode(withName: "box2") as! SKSpriteNode
         box2.physicsBody = SKPhysicsBody(rectangleOf: size)
         box2.physicsBody?.affectedByGravity = true
@@ -77,12 +93,18 @@ class GameScene: SKScene {
         box2.physicsBody?.mass = 0.1
         box2.physicsBody?.allowsRotation = true
         
+        box2.physicsBody?.collisionBitMask = ColliderType.Bird.rawValue //to crash eachother
+        
+        
         box3 = childNode(withName: "box3") as! SKSpriteNode
         box3.physicsBody = SKPhysicsBody(rectangleOf: size)
         box3.physicsBody?.affectedByGravity = true
         box3.physicsBody?.isDynamic = true
         box3.physicsBody?.mass = 0.1
         box3.physicsBody?.allowsRotation = true
+        
+        box3.physicsBody?.collisionBitMask = ColliderType.Bird.rawValue //to crash eachother
+        
        
         box4 = childNode(withName: "box4") as! SKSpriteNode
         box4.physicsBody = SKPhysicsBody(rectangleOf: size)
@@ -91,6 +113,9 @@ class GameScene: SKScene {
         box4.physicsBody?.mass = 0.1
         box4.physicsBody?.allowsRotation = true
         
+        box4.physicsBody?.collisionBitMask = ColliderType.Bird.rawValue //to crash eachother
+        
+        
         box5 = childNode(withName: "box5") as! SKSpriteNode
         box5.physicsBody = SKPhysicsBody(rectangleOf: size)
         box5.physicsBody?.affectedByGravity = true
@@ -98,12 +123,22 @@ class GameScene: SKScene {
         box5.physicsBody?.mass = 0.1
         box5.physicsBody?.allowsRotation = true
         
+        box5.physicsBody?.collisionBitMask = ColliderType.Bird.rawValue //to crash eachother
+        
         
         
         
         
         
 
+    }
+    
+    func didBegin(_ contact: SKPhysicsContact) {
+        
+        if contact.bodyA.collisionBitMask == ColliderType.Bird.rawValue || contact.bodyB.contactTestBitMask == ColliderType.Bird.rawValue { // to recognize collision
+            print("contact")
+            
+        }
     }
     
     
@@ -213,7 +248,7 @@ class GameScene: SKScene {
         // Called before each frame is rendered
         
         if let birdPhysicsBody = bird.physicsBody { // to get out from optinal
-            if birdPhysicsBody.velocity.dy <= 0.01 && birdPhysicsBody.velocity.dx <= 0.01
+            if birdPhysicsBody.velocity.dy <= 0.1 && birdPhysicsBody.velocity.dx <= 0.1
                 && birdPhysicsBody.angularVelocity <= 0 && gameStarted == true { //to checkout bird flying stop.
                 
                 bird.physicsBody?.affectedByGravity = false
