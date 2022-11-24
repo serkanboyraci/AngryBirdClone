@@ -22,6 +22,8 @@ class GameScene: SKScene {
     
     var gameStarted = false // only is it false, you can drag the bird
     
+    var originalPosition : CGPoint?
+    
 
     
     override func didMove(to view: SKView) {
@@ -52,6 +54,7 @@ class GameScene: SKScene {
         bird.physicsBody?.affectedByGravity = false // wait to tap
         bird.physicsBody?.isDynamic = true
         bird.physicsBody?.mass = 0.15
+        originalPosition = bird.position
         
         // BOXES
         
@@ -166,7 +169,38 @@ class GameScene: SKScene {
       
     }
     
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) { // when touching bird ended, bird must fly.
+        if gameStarted == false {
+            
+            if let touch = touches.first {
+                let touchLocation = touch.location(in: self)
+                let touchNodes = nodes(at: touchLocation)
+                
+                if touchNodes.isEmpty == false { // it is SKNode Array
+                    for node in touchNodes {
+                        if let sprite = node as? SKSpriteNode { // we cast as SKSpriteNode and if we catch the bird, we can chagne bird location
+                            if sprite == bird {
+                                
+                                let dx = -(touchLocation.x - originalPosition!.x) // to give direction, we have to give minus
+                                let dy = -(touchLocation.y - originalPosition!.y)
+                                
+                                let impulse = CGVector(dx: dx, dy: dy)
+                                
+                                bird.physicsBody?.applyImpulse(impulse)
+                                bird.physicsBody?.affectedByGravity = true
+                                
+                                gameStarted = true
+                                
+                                
+                                
+                                
+                            }
+                        }
+                    }
+                }
+            }
+            
+        }
        
     }
     
