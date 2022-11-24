@@ -20,6 +20,8 @@ class GameScene: SKScene {
     var box4 = SKSpriteNode()
     var box5 = SKSpriteNode()
     
+    var gameStarted = false // only is it false, you can drag the bird
+    
 
     
     override func didMove(to view: SKView) {
@@ -115,13 +117,52 @@ class GameScene: SKScene {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        /*
         bird.physicsBody?.applyImpulse(CGVector(dx: 50, dy: 100)) // to give impulse
         bird.physicsBody?.affectedByGravity = true // after tapping affected from gravity
+         */
+        
+        if gameStarted == false {
+            
+            if let touch = touches.first {
+                let touchLocation = touch.location(in: self)
+                let touchNodes = nodes(at: touchLocation)
+                
+                if touchNodes.isEmpty == false {
+                    for node in touchNodes {
+                        if let sprite = node as? SKSpriteNode {
+                            if sprite == bird {
+                                bird.position = touchLocation
+                            }
+                        }
+                    }
+                }
+            }
+            
+        }
 
     
     }
     
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) { // we have to use this func to drag the bird.
+        if gameStarted == false {
+            
+            if let touch = touches.first {
+                let touchLocation = touch.location(in: self)
+                let touchNodes = nodes(at: touchLocation)
+                
+                if touchNodes.isEmpty == false { // it is SKNode Array
+                    for node in touchNodes {
+                        if let sprite = node as? SKSpriteNode { // we cast as SKSpriteNode and if we catch the bird, we can chagne bird location
+                            if sprite == bird {
+                                bird.position = touchLocation
+                            }
+                        }
+                    }
+                }
+            }
+            
+        }
       
     }
     
