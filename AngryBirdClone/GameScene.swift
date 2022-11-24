@@ -209,7 +209,21 @@ class GameScene: SKScene {
     }
     
     
-    override func update(_ currentTime: TimeInterval) {
+    override func update(_ currentTime: TimeInterval) { // to control all position.
         // Called before each frame is rendered
+        
+        if let birdPhysicsBody = bird.physicsBody { // to get out from optinal
+            if birdPhysicsBody.velocity.dy <= 0.01 && birdPhysicsBody.velocity.dx <= 0.01
+                && birdPhysicsBody.angularVelocity <= 0 && gameStarted == true { //to checkout bird flying stop.
+                
+                bird.physicsBody?.affectedByGravity = false
+                bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+                bird.physicsBody?.angularVelocity = 0
+                bird.position = originalPosition!
+                gameStarted = false
+                
+            }
+        }
+        
     }
 }
